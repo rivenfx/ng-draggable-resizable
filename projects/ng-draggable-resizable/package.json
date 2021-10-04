@@ -5,10 +5,10 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rivenfx/ng-packages.git"
+    "url": "git+https://github.com/rivenfx/ng-draggable-resizable.git"
   },
   "bugs": {
-    "url": "https://github.com/rivenfx/ng-packages/issues"
+    "url": "https://github.com/rivenfx/ng-draggable-resizable/issues"
   },
   "homepage": "http://riven.staneee.com",
   "keywords": [
@@ -19,6 +19,8 @@
     "drag",
     "resize",
     "resizable",
+    "ng-draggable-resizable",
+    "draggable-resizable",
     "angular",
     "component"
   ],
