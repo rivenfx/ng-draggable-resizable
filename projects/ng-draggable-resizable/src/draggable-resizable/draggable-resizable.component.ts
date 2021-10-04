@@ -8,8 +8,8 @@ import {
   SimpleChange,
   SimpleChanges
 } from '@angular/core';
-import { matchesSelectorToParentElements, getComputedSize, addEvent, removeEvent } from '../utils';
-import { computeWidth, computeHeight, restrictToBounds, snapToGrid } from '../utils';
+import {matchesSelectorToParentElements, getComputedSize, addEvent, removeEvent} from '../utils';
+import {computeWidth, computeHeight, restrictToBounds, snapToGrid} from '../utils';
 import {
   events,
   IDrag,
@@ -31,7 +31,7 @@ let eventsFor = events.mouse
     '[class]': 'selfClass',
     '(mousedown)': 'elementMouseDown($event)',
     '(touchstart)': "elementTouchDown($event)",
-    '(contextmenu)': 'onContextMenu($event)',
+    // '(contextmenu)': 'onContextMenu($event)',
   }
 })
 export class DraggableResizableComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
@@ -98,7 +98,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
   /** 定义捕捉元素的网格 */
   @Input() grid: number[] = [1, 1];
   /** 将组件的移动和尺寸限制为父组件（如果提供了就设置true），或者限制为由有效CSS选择器标识的元素 */
-  @Input() parent: boolean | string = false;
+  @Input() parent: boolean | string = true;
   /** 定义应该用于拖动组件的选择器 */
   @Input() dragHandle: string;
   /** 定义应该用于防止拖动初始化的选择器 */
@@ -115,7 +115,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
   @Input() onResize: (handle?: DraggableResizableComponent, left?: number, top?: number, width?: number, height?: number) => boolean = () => true;
   // ==================== 新增属性 开始 ====================
   /** 当使用transform:scale()进行缩放操作时，其中switch为是否让handle始终保持视觉效果不变,size为handle的大小(宽高相同), offset为handle的位置偏移，通常在自定义handle样式时需要设置 */
-  @Input() handleInfo: IHandleInfo = { size: 8, offset: -5, switch: true };
+  @Input() handleInfo: IHandleInfo = {size: 8, offset: -5, switch: true};
   /** 当使用transform:scale()进行缩放操作时，用来修复操作组件时鼠标指针与移动缩放位置有所偏移的情况 */
   @Input() scaleRatio = 1;
   /** 定义组件是否开启冲突检测 */
@@ -150,8 +150,8 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
   left = this.x;
   top = this.y;
 
-  right: number;
-  bottom: number;
+  right: number = 0;
+  bottom: number = 0;
 
   _width: number;
   get width() {
@@ -198,7 +198,6 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
   handle = null;
 
 
-
   /** 当前dom元素是否正在拖拽 */
   dragging = false;
   /** 当前dom元素元素的zIndex */
@@ -213,7 +212,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
   resizingOnY: boolean;
 
   /** 鼠标点击位置 */
-  mouseClickPosition: IMouseClickPosition = { mouseX: 0, mouseY: 0, x: 0, y: 0, w: 0, h: 0 };
+  mouseClickPosition: IMouseClickPosition = {mouseX: 0, mouseY: 0, x: 0, y: 0, w: 0, h: 0};
 
   /** 当前dom元素界限 */
   bounds = {
@@ -231,6 +230,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
   get enabled() {
     return this.active;
   }
+
   /** 当前dom元素是否启用 */
   set enabled(val: boolean) {
     this.active = val;
@@ -324,7 +324,10 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
   constructor(
     public elRef: ElementRef<HTMLElement>
   ) {
+    const [parentWidth, parentHeight] = this.getParentSize()
 
+    this.parentWidth = parentWidth
+    this.parentHeight = parentHeight
   }
 
 
@@ -361,10 +364,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
       this.$el.ondragstart = () => false;
     }
 
-    const [parentWidth, parentHeight] = this.getParentSize()
 
-    this.parentWidth = parentWidth
-    this.parentHeight = parentHeight
     const [width, height] = getComputedSize(this.$el)
     this.aspectFactor = (this.w !== 'auto' ? this.w : width) / (this.h !== 'auto' ? this.h : height)
     this.width = this.w !== 'auto' ? this.w : width
@@ -488,7 +488,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     const stick = handle;
 
     if (!this.handleInfo.switch) {
-      return { display: this.enabled ? 'block' : 'none' }
+      return {display: this.enabled ? 'block' : 'none'}
     }
 
     const size = parseFloat((this.handleInfo.size / this.scaleRatio).toFixed(2));
@@ -546,19 +546,19 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     return `${this.classNameHandle} ${this.classNameHandle}-${handle}`;
   }
 
-  // 右键菜单
-  onContextMenu(e) {
+  /** 右键菜单 */
+  onContextMenu(e: MouseEvent) {
     this.contextmenu.emit(e);
   }
 
-  // 控制柄触摸按下
+  /** 控制柄触摸按下 */
   handleTouchDown(handle: string, e: TouchEvent) {
     eventsFor = events.touch
 
     this.handleDown(handle, e)
   }
 
-  // 控制柄按下
+  /** 控制柄按下 */
   handleDown(handle: string, e: MouseEvent | TouchEvent) {
     if (e instanceof MouseEvent && e.which !== 1) {
       return
@@ -595,9 +595,9 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     addEvent(document.documentElement, eventsFor.stop, this.handleUp);
   }
 
-  // 重置边界和鼠标状态
+  /** 重置边界和鼠标状态 */
   resetBoundsAndMouseState() {
-    this.mouseClickPosition = { mouseX: 0, mouseY: 0, x: 0, y: 0, w: 0, h: 0 }
+    this.mouseClickPosition = {mouseX: 0, mouseY: 0, x: 0, y: 0, w: 0, h: 0}
 
     this.bounds = {
       minLeft: null,
@@ -611,7 +611,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     }
   }
 
-  // 检查父元素大小
+  /** 检查父元素大小 */
   protected onCheckParentSize() {
     if (this.parent) {
       const [newParentWidth, newParentHeight] = this.getParentSize()
@@ -624,7 +624,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     }
   }
 
-  // 获取父元素大小
+  /** 获取父元素大小 */
   protected getParentSize() {
     if (this.parent === true) {
       const style = window.getComputedStyle(this.parentElement, null)
@@ -632,32 +632,39 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
         parseInt(style.getPropertyValue('width'), 10),
         parseInt(style.getPropertyValue('height'), 10)
       ]
-    }
-    if (typeof (this.parent) === 'string') {
+    } else if (typeof (this.parent) === 'string') {
       const parentNode = document.querySelector(this.parent)
       if (!(parentNode instanceof HTMLElement)) {
         throw new Error(`The selector ${this.parent} does not match any element`)
       }
       return [parentNode.offsetWidth, parentNode.offsetHeight]
+    } else {
+      const style = window.getComputedStyle(window.document.body, null)
+      return [
+        parseInt(style.getPropertyValue('width'), 10),
+        parseInt(style.getPropertyValue('height'), 10)
+      ]
     }
+
 
     return [null, null]
   }
 
 
-  // 元素触摸按下
+  /** 元素触摸按下 */
   elementTouchDown(e: TouchEvent) {
     eventsFor = events.touch
 
     this.elementDown(e)
   }
 
+  /** 元素鼠标按下 */
   elementMouseDown(e: MouseEvent) {
     eventsFor = events.mouse
     this.elementDown(e)
   }
 
-  // 元素按下
+  /** 元素按下 */
   elementDown(e: TouchEvent | MouseEvent) {
     if (e instanceof MouseEvent && e.which !== 1) {
       return
@@ -705,8 +712,8 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     }
   }
 
-  // 移动
-  protected async onMove(e) {
+  /** 元素移动 */
+  protected async onMove(e: TouchEvent | MouseEvent) {
     if (this.resizing) {
       this.onHandleResize(e)
     } else if (this.dragging) {
@@ -714,15 +721,15 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     }
   }
 
-  // 元素移动
-  protected async onHandleDrag(e) {
+  /** 元素移动 */
+  protected async onHandleDrag(e: TouchEvent | MouseEvent) {
     const axis = this.axis
     const grid = this.grid
     const bounds = this.bounds
     const mouseClickPosition = this.mouseClickPosition
 
-    const tmpDeltaX = axis && axis !== 'y' ? mouseClickPosition.mouseX - (e.touches ? e.touches[0].pageX : e.pageX) : 0
-    const tmpDeltaY = axis && axis !== 'x' ? mouseClickPosition.mouseY - (e.touches ? e.touches[0].pageY : e.pageY) : 0
+    const tmpDeltaX = axis && axis !== 'y' ? mouseClickPosition.mouseX - (e instanceof TouchEvent ? e.touches[0].pageX : e.pageX) : 0
+    const tmpDeltaY = axis && axis !== 'x' ? mouseClickPosition.mouseY - (e instanceof TouchEvent ? e.touches[0].pageY : e.pageY) : 0
 
     const [deltaX, deltaY] = snapToGrid(grid, tmpDeltaX, tmpDeltaY, this.scaleRatio)
 
@@ -745,13 +752,13 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     });
   }
 
-  // 从控制柄松开
-  protected async onHandleUp(e) {
+  /** 从控制柄松开 */
+  protected async onHandleUp(e: TouchEvent | MouseEvent) {
     this.handle = null
 
     // 初始化辅助线数据
-    const temArr = new Array(3).fill({ display: false, position: '', origin: '', lineLength: '' })
-    const refLine = { vLine: [], hLine: [] }
+    const temArr = new Array(3).fill({display: false, position: '', origin: '', lineLength: ''})
+    const refLine = {vLine: [], hLine: []}
     for (let i in refLine) {
       refLine[i] = JSON.parse(JSON.stringify(temArr))
     }
@@ -790,7 +797,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     removeEvent(document.documentElement, eventsFor.move, this.handleResize)
   }
 
-  // 设置属性
+  /** 设置属性 */
   protected settingAttribute() {
     // 设置冲突检测
     this.$el.setAttribute('data-is-check', `${this.isConflictCheck}`)
@@ -798,8 +805,8 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     this.$el.setAttribute('data-is-snap', `${this.snap}`)
   }
 
-  // 冲突检测
-  conflictCheck() {
+  /** 冲突检测 */
+  protected conflictCheck() {
     const top = this.top
     const left = this.left
     const width = this.width
@@ -848,8 +855,8 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     }
   }
 
-  // 检测对齐元素
-  async snapCheck() {
+  /** 检测对齐元素 */
+  protected async snapCheck() {
     let width = this.width
     let height = this.height
     if (this.snap) {
@@ -859,8 +866,8 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
       let activeBottom = this.top + height
 
       // 初始化辅助线数据
-      const temArr = new Array(3).fill({ display: false, position: '', origin: '', lineLength: '' })
-      const refLine = { vLine: [], hLine: [] }
+      const temArr = new Array(3).fill({display: false, position: '', origin: '', lineLength: ''})
+      const refLine = {vLine: [], hLine: []}
       for (let i in refLine) {
         refLine[i] = JSON.parse(JSON.stringify(temArr))
       }
@@ -870,11 +877,11 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
       const nodes = Array.from(this.$el.parentNode.childNodes).map(o => o as HTMLElement);
 
       let tem = {
-        value: { x: [[], [], []], y: [[], [], []] },
+        value: {x: [[], [], []], y: [[], [], []]},
         display: [],
         position: []
       }
-      const { groupWidth, groupHeight, groupLeft, groupTop, bln } = await this.getActiveAll(nodes)
+      const {groupWidth, groupHeight, groupLeft, groupTop, bln} = await this.getActiveAll(nodes)
       if (!bln) {
         width = groupWidth
         height = groupHeight
@@ -987,7 +994,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
             const xory = i < 6 ? 'y' : 'x'
             const horv = i < 6 ? 'hLine' : 'vLine'
             if (tem.display[i]) {
-              const { origin, length } = this.calcLineValues(tem.value[xory][arrTem[i]])
+              const {origin, length} = this.calcLineValues(tem.value[xory][arrTem[i]])
               refLine[horv][arrTem[i]].display = tem.display[i]
               refLine[horv][arrTem[i]].position = tem.position[i];
               refLine[horv][arrTem[i]].origin = origin
@@ -1005,10 +1012,11 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     }
   }
 
+  /** 计算参考线 */
   protected calcLineValues(arr: number[]): { length: number, origin: number } {
     const length = Math.max(...arr) - Math.min(...arr);
     const origin = Math.min(...arr);
-    return { length, origin }
+    return {length, origin}
   }
 
   /** 取消 */
@@ -1057,17 +1065,22 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
       groupTop = Math.min(...XArray)
     }
     const bln = AllLength === 1
-    return { groupWidth, groupHeight, groupLeft, groupTop, bln }
+    return {groupWidth, groupHeight, groupLeft, groupTop, bln}
   }
 
-  // 正则获取left与top
-  protected formatTransformVal(string) {
-    let [left, top] = string.replace(/[^0-9\-,]/g, '').split(',')
-    if (top === undefined) top = 0
+  /** 正则获取left与top */
+  protected formatTransformVal(transform: string) {
+    let [left, top] = transform.replace(/[^0-9\-,]/g, '').split(',')
+    if (left === undefined) {
+      left = '0';
+    }
+    if (top === undefined) {
+      top = '0';
+    }
     return [+left, +top]
   }
 
-  // 计算移动范围
+  /** 计算移动范围 */
   protected calcDragLimits() {
     return {
       minLeft: this.left % this.grid[0],
@@ -1081,6 +1094,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     }
   }
 
+  /** 水平移动 */
   protected moveHorizontally(val: number) {
     const [deltaX, _] = snapToGrid(this.grid, val, this.top, this.scale)
     const left = restrictToBounds(deltaX, this.bounds.minLeft, this.bounds.maxLeft)
@@ -1088,6 +1102,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     this.right = this.parentWidth - this.width - left
   }
 
+  /** 垂直移动 */
   protected moveVertically(val: number) {
     const [_, deltaY] = snapToGrid(this.grid, this.left, val, this.scale)
     const top = restrictToBounds(deltaY, this.bounds.minTop, this.bounds.maxTop)
@@ -1095,7 +1110,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     this.bottom = this.parentHeight - this.height - top
   }
 
-  // 计算调整大小范围
+  /** 计算调整大小范围 */
   protected calcResizeLimits() {
     let minW = this.minW
     let minH = this.minH
@@ -1200,7 +1215,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
   }
 
 
-  // 控制柄移动
+  /** 控制柄移动 */
   protected async onHandleResize(e) {
     let left = this.left
     let top = this.top
@@ -1281,6 +1296,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     });
   }
 
+  /** 修改宽度 */
   protected changeWidth(val: number) {
     const [newWidth, _] = snapToGrid(this.grid, val, 0, this.scale)
     let right = restrictToBounds(
@@ -1300,6 +1316,7 @@ export class DraggableResizableComponent implements OnInit, AfterViewInit, OnCha
     this.height = height
   }
 
+  /** 修改高度 */
   protected changeHeight(val: number) {
     const [_, newHeight] = snapToGrid(this.grid, 0, val, this.scale)
     let bottom = restrictToBounds(

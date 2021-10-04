@@ -1,17 +1,19 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'basic-max-width-hegiht',
   template: `
-    <div ngDraggableResizable [w]="200" [h]="200" [maxWidth]="minWidth" [maxHeight]="minHeight">
-      <p>Basic component with programmable <b>minWidth</b> and <b>minHeight</b> props.</p>
+    <div style="width: 100%;height: 1080px;">
+      <div ngDraggableResizable [w]="200" [h]="200" [maxWidth]="maxWidth" [maxHeight]="maxHeight">
+        <p>Basic component with programmable <b>maxWidth</b> and <b>maxHeight</b> props.</p>
+      </div>
     </div>
   `
 })
-export class BasicMinWidthHeightComponent {
+export class BasicMaxWidthHeightComponent {
 
-  minWidth: 400;
+  maxWidth = 400;
 
-  minHeight: 400;
+  maxHeight = 400;
 
 }

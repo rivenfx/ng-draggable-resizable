@@ -6,6 +6,7 @@ import {moduleMetadata, storiesOf} from "@storybook/angular";
 import {NgDraggableResizableModule} from "@rivenfx/ng-draggable-resizable";
 import {BasicComponent} from "./basic/basic.component";
 import {BasicMinWidthHeightComponent} from "./basic/basic-min-width-height.component";
+import {BasicMaxWidthHeightComponent} from "./basic/basic-max-width-height.component";
 
 
 const common = {
@@ -32,7 +33,7 @@ storiesOf('Examples/Basics', module)
   })
   .add('maxWidth-maxHeight', () => {
     return {
-      component: BasicMinWidthHeightComponent,
+      component: BasicMaxWidthHeightComponent,
       ...common
     };
   })
