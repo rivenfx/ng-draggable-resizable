@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "pack": "npm run ng-draggable-resizable",
-    "ng-draggable-resizable": "ng build --prod ng-draggable-resizable"
+    "ng-draggable-resizable": "ng build ng-draggable-resizable"
   },
   "private": true,
   "dependencies": {
