@@ -23,7 +23,7 @@ Primary.args = {
   primary: true,
   label: 'Button',
 };
-
+Primary.storyName = 'I am the primary';
 export const Secondary = Template.bind({});
 Secondary.args = {
   label: 'Button',
