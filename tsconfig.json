@@ -17,9 +17,8 @@
     "importHelpers": true,
     "emitDecoratorMetadata": true,
     "paths": {
-      "ng-draggable-resizable": [
-        "dist/ng-draggable-resizable/ng-draggable-resizable",
-        "dist/ng-draggable-resizable"
+      "@rivenfx/ng-draggable-resizable": [
+        "projects/ng-draggable-resizable/public-api"
       ]
     },
     "target": "es2017",
