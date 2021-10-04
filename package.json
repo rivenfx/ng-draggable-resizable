@@ -1,5 +1,5 @@
 {
-  "name": "ng-draggable-resizable",
+  "name": "app-ng-draggable-resizable",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

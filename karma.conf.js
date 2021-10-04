@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/ng-draggable-resizable'),
+      dir: require('path').join(__dirname, './coverage/app-ng-draggable-resizable'),
       subdir: '.',
       reporters: [
         { type: 'html' },

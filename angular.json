@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ng-draggable-resizable": {
+    "app-ng-draggable-resizable": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ng-draggable-resizable",
+            "outputPath": "dist/app-ng-draggable-resizable",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ng-draggable-resizable:build:production"
+              "browserTarget": "app-ng-draggable-resizable:build:production"
             },
             "development": {
-              "browserTarget": "ng-draggable-resizable:build:development"
+              "browserTarget": "app-ng-draggable-resizable:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ng-draggable-resizable:build"
+            "browserTarget": "app-ng-draggable-resizable:build"
           }
         },
         "test": {
@@ -107,5 +107,5 @@
       }
     }
   },
-  "defaultProject": "ng-draggable-resizable"
+  "defaultProject": "app-ng-draggable-resizable"
 }

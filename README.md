@@ -1,1 +1,1 @@
-ng-draggable-resizable
+app-ng-draggable-resizable
