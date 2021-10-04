@@ -1,0 +1,9 @@
+<div *ngFor="let handle of actualHandles"
+     [attr.data-handle-name]="handle"
+     [class]="handleClass(handle)"
+     [style]="handleStyle(handle)"
+     (mousedown)="handleDown(handle,$event)"
+     (touchstart)="handleTouchDown(handle, $event)">
+</div>
+
+<ng-content></ng-content>
