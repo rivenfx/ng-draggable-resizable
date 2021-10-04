@@ -22,8 +22,8 @@
 // //   props: args,
 // // });
 // //
-// // export const Basic = BasicTemplate.bind({});
-// // Basic.storyName = '基本使用';
+// // export const BasicComponent = BasicTemplate.bind({});
+// // BasicComponent.storyName = '基本使用';
 //
 // // This exports the Stories group for this component
 // export default {

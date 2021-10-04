@@ -3,13 +3,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'basic',
   template: `
-    <div ngDraggableResizable>
+    <div ngDraggableResizable [w]="200" [h]="200">
       <p>你可以拖着我，按照自己的意愿调整大小。</p>
     </div>
-  `,
-  styleUrls:[
-    '../../../projects/ng-draggable-resizable/src/styles/index.less'
-  ]
+  `
 })
 export class BasicComponent {
 
