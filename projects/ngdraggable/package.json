@@ -1,0 +1,38 @@
+{
+  "name": "@rivenfx/ngdraggable",
+  "version": "0.0.2",
+  "author": "staneee<msmadaoe@msn.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rivenfx/ng-draggable-resizable.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rivenfx/ng-draggable-resizable/issues"
+  },
+  "homepage": "http://riven.staneee.com",
+  "keywords": [
+    "riven",
+    "rivenfx",
+    "staneee",
+    "angular",
+    "ng",
+    "drag",
+    "and",
+    "drop",
+    "list",
+    "Sortable.js",
+    "component",
+    "nested"
+  ],
+  "publishConfig": {
+    "@rivenfx:registry": "https://registry.npmjs.org/"
+  },
+  "peerDependencies": {
+    "@angular/common": "^12.2.0",
+    "@angular/core": "^12.2.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}

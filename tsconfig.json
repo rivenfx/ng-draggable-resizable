@@ -19,6 +19,9 @@
     "paths": {
       "@rivenfx/ng-draggable-resizable": [
         "projects/ng-draggable-resizable/"
+      ],
+      "@rivenfx/ngdraggable": [
+        "projects/ngdraggable/"
       ]
     },
     "target": "es2017",

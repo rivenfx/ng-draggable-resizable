@@ -136,6 +136,37 @@
           }
         }
       }
+    },
+    "ngdraggable": {
+      "projectType": "library",
+      "root": "projects/ngdraggable",
+      "sourceRoot": "projects/ngdraggable/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/ngdraggable/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngdraggable/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngdraggable/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngdraggable/src/test.ts",
+            "tsConfig": "projects/ngdraggable/tsconfig.spec.json",
+            "karmaConfig": "projects/ngdraggable/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "defaultProject": "app-ng-draggable-resizable"
